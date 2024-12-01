@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "220003709726",
+    "project_id": "netchat-ac3f5",
+    "storage_bucket": "netchat-ac3f5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220003709726:android:7c46ab7694c8d021534f0f",
+        "android_client_info": {
+          "package_name": "netchat.com.mmt.net_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220003709726-alriaela955suit51fvgvfrlhkqe0u3j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "netchat.com.mmt.net_chat",
+            "certificate_hash": "828d2de6dc9a0e3da79e30ad8792194814f2e983"
+          }
+        },
+        {
+          "client_id": "220003709726-21tt95nggbcehbct0cnelf1ki5qfp97f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALu6ePsYW0mEHOJ3TAL7cB8qEBRxgcROY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220003709726-21tt95nggbcehbct0cnelf1ki5qfp97f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
