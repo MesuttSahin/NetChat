@@ -24,10 +24,10 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
       _formKey.currentState!.save();
 
       final _userModel = Provider.of<UserViewmodel>(context, listen: false);
-      if (_email != null && _password != null) {
-        print('Email: $_email, Password: $_password');
 
-        if (_formType == FormType.LOGIN) {
+      if (_formType == FormType.LOGIN) {
+        // Giriş yapma işlemi
+        if (_email != null && _password != null) {
           UserModel? _girisYapanUser =
               await _userModel.signInWithEmailAndPassword(_email!, _password!);
           if (_girisYapanUser != null) {
@@ -35,10 +35,13 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
           }
         }
       } else {
-        UserModel? _olusturulanUser =
-            await _userModel.createWithEmailAndPassword(_email!, _password!);
-        if (_olusturulanUser != null) {
-          print("Oturum açan user : " + _olusturulanUser.userID.toString());
+        // Kayıt olma işlemi
+        if (_email != null && _password != null) {
+          UserModel? _olusturulanUser =
+              await _userModel.createWithEmailAndPassword(_email!, _password!);
+          if (_olusturulanUser != null) {
+            print("Kayıt olan user : " + _olusturulanUser.userID.toString());
+          }
         }
       }
     } else {
@@ -50,6 +53,8 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
     setState(() {
       _formType =
           _formType == FormType.LOGIN ? FormType.REGISTER : FormType.LOGIN;
+      print(_formType
+          .toString()); // buraya bak !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     });
   }
 
