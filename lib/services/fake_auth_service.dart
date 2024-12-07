@@ -13,7 +13,7 @@ class FakeAuthService implements AuthBase {
 
   @override
   Future<UserModel?> signInAnonymously() async { 
-    return await Future.delayed(Duration(seconds: 2), () => UserModel(userID: userID));
+    return await Future.delayed(const Duration(seconds: 2), () => UserModel(userID: userID));
   }
 
   @override

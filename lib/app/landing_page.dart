@@ -5,20 +5,22 @@ import 'package:net_chat/viewmodel/user_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatelessWidget {
+  const LandingPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final _userViewModel = Provider.of<UserViewmodel>(context);
+    final userViewModel = Provider.of<UserViewmodel>(context);
 
-    if (_userViewModel.state == ViewState.Idle) {
-      if (_userViewModel.userModel == null) {
+    if (userViewModel.state == ViewState.Idle) {
+      if (userViewModel.userModel == null) {
         return SignInPage();
       } else {
         return HomePage(
-          user: _userViewModel.userModel!,
+          user: userViewModel.userModel!,
         );
       }
     } else {
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
         ),

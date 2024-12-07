@@ -21,11 +21,12 @@ class SocialLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 8),
       child: SizedBox(
         height: height ?? 50, // Varsayılan yükseklik
         child: ElevatedButton(
           onPressed: onPressed,
+          style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,7 +43,6 @@ class SocialLoginButton extends StatelessWidget {
               Opacity(opacity: 0, child: buttonIcon)
             ],
           ),
-          style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
         ),
       ),
     );

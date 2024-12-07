@@ -23,24 +23,24 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final _userModel = Provider.of<UserViewmodel>(context, listen: false);
+      final userModel = Provider.of<UserViewmodel>(context, listen: false);
 
       if (_formType == FormType.LOGIN) {
         // Giriş yapma işlemi
         if (_email != null && _password != null) {
-          UserModel? _girisYapanUser =
-              await _userModel.signInWithEmailAndPassword(_email!, _password!);
-          if (_girisYapanUser != null) {
-            print("Oturum açan user : " + _girisYapanUser.userID.toString());
+          UserModel? girisYapanUser =
+              await userModel.signInWithEmailAndPassword(_email!, _password!);
+          if (girisYapanUser != null) {
+            print("Oturum açan user : " + girisYapanUser.userID.toString());
           }
         }
       } else {
         // Kayıt olma işlemi
         if (_email != null && _password != null) {
-          UserModel? _olusturulanUser =
-              await _userModel.createWithEmailAndPassword(_email!, _password!);
-          if (_olusturulanUser != null) {
-            print("Kayıt olan user : " + _olusturulanUser.userID.toString());
+          UserModel? olusturulanUser =
+              await userModel.createWithEmailAndPassword(_email!, _password!);
+          if (olusturulanUser != null) {
+            print("Kayıt olan user : " + olusturulanUser.userID.toString());
           }
         }
       }
@@ -78,7 +78,7 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
                   children: [
                     TextFormField(
                       keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.mail),
                           hintText: "Email",
                           label: Text("Email"),
@@ -87,12 +87,12 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
                         _email = inputMail;
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     TextFormField(
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.password),
                           hintText: "Password",
                           label: Text("Password"),
@@ -101,7 +101,7 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
                         _password = inputPassword;
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     SocialLoginButton(
@@ -111,7 +111,7 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
                         onPressed: () {
                           _formSubmit();
                         }),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     TextButton(

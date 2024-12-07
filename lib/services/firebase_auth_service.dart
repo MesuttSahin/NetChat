@@ -39,8 +39,8 @@ class FirebaseAuthService implements AuthBase {
   @override
   Future<bool> signOut() async {
     try {
-      final _googleSignIn = GoogleSignIn();
-      await _googleSignIn.signOut();
+      final googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
       await _firebaseAuth.signOut();
       return true;
     } catch (e) {
@@ -53,17 +53,17 @@ class FirebaseAuthService implements AuthBase {
   @override
   Future<UserModel?> singInWithGoogle() async {
     try {
-      final GoogleSignIn _googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? _googleUser = await _googleSignIn.signIn();
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-      if (_googleUser != null) {
-        final GoogleSignInAuthentication _googleAuth =
-            await _googleUser.authentication;
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
 
-        if (_googleAuth.idToken != null && _googleAuth.accessToken != null) {
+        if (googleAuth.idToken != null && googleAuth.accessToken != null) {
           final OAuthCredential credential = GoogleAuthProvider.credential(
-            idToken: _googleAuth.idToken,
-            accessToken: _googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+            accessToken: googleAuth.accessToken,
           );
 
           final UserCredential sonuc =
@@ -96,7 +96,7 @@ class FirebaseAuthService implements AuthBase {
           email: email, password: password);
       return _userModelFromFirebase(sonuc.user);
     } catch (e) {
-      print("firebase hatası: " + e.toString());
+      print("firebase hatası: $e");
       return null;
     }
   }

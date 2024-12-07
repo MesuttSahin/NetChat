@@ -7,8 +7,8 @@ import 'package:net_chat/services/firebase_auth_service.dart';
 enum AppMode { DEBUG, RELEASE }
 
 class UserRepository implements AuthBase {
-  FirebaseAuthService _firebaseAuthService = locator<FirebaseAuthService>();
-  FakeAuthService _fakeAuthService = locator<FakeAuthService>();
+  final FirebaseAuthService _firebaseAuthService = locator<FirebaseAuthService>();
+  final FakeAuthService _fakeAuthService = locator<FakeAuthService>();
 
   AppMode appMode = AppMode.RELEASE;
 

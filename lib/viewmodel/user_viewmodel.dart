@@ -8,15 +8,15 @@ enum ViewState { Idle, Busy }
 
 class UserViewmodel with ChangeNotifier implements AuthBase {
   ViewState _state = ViewState.Idle;
-  UserRepository _userRepository = locator<UserRepository>();
+  final UserRepository _userRepository = locator<UserRepository>();
   UserModel? _userModel;
 
-  UserModel? get userModel => this._userModel;
+  UserModel? get userModel => _userModel;
 
-  get state => this._state;
+  get state => _state;
 
   set state(value) {
-    this._state = value;
+    _state = value;
     notifyListeners();
   }
 
@@ -31,7 +31,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       _userModel = await _userRepository.currentUser();
       return _userModel;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;
@@ -45,7 +45,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       _userModel = await _userRepository.signInAnonymously();
       return _userModel;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;
@@ -60,7 +60,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       _userModel = null;
       return sonuc;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return false;
     } finally {
       state = ViewState.Idle;
@@ -74,7 +74,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       _userModel = await _userRepository.singInWithGoogle();
       return _userModel;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;
@@ -90,7 +90,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
           await _userRepository.createWithEmailAndPassword(email, password);
       return _userModel;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;
@@ -106,7 +106,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
           await _userRepository.signInWithEmailAndPassword(email, password);
       return _userModel;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   final UserModel user;
 
-  HomePage({super.key, required this.user});
+  const HomePage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +33,8 @@ class HomePage extends StatelessWidget {
   }
 
   Future<bool> _cikisYap(BuildContext context) async {
-    final _userViewModel = Provider.of<UserViewmodel>(context, listen: false);
-    var sonuc = await _userViewModel.signOut();
+    final userViewModel = Provider.of<UserViewmodel>(context, listen: false);
+    var sonuc = await userViewModel.signOut();
     return sonuc;
   }
 }
