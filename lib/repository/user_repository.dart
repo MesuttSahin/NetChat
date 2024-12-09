@@ -3,12 +3,15 @@ import 'package:net_chat/model/user_model.dart';
 import 'package:net_chat/services/auth_base.dart';
 import 'package:net_chat/services/fake_auth_service.dart';
 import 'package:net_chat/services/firebase_auth_service.dart';
+import 'package:net_chat/services/firestore_db_service.dart';
 
 enum AppMode { DEBUG, RELEASE }
 
 class UserRepository implements AuthBase {
-  FirebaseAuthService _firebaseAuthService = locator<FirebaseAuthService>();
-  FakeAuthService _fakeAuthService = locator<FakeAuthService>();
+  final FirebaseAuthService _firebaseAuthService = locator<FirebaseAuthService>();
+  final FakeAuthService _fakeAuthService = locator<FakeAuthService>();
+  final FirestoreDbService _firestoreDbService = locator<FirestoreDbService>();
+
 
   AppMode appMode = AppMode.RELEASE;
 
@@ -54,8 +57,11 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.DEBUG) {
       return await _fakeAuthService.createWithEmailAndPassword(email, password);
     } else {
-      return await _firebaseAuthService.createWithEmailAndPassword(
-          email, password);
+      UserModel? _userModel = await _firebaseAuthService.createWithEmailAndPassword(email, password);
+      bool _sonuc = await _firestoreDbService.saveUser(_userModel!); // Hata cikarsa buraya bakmak lazim
+      if(_sonuc){
+        return _userModel;
+      }else return null;
     }
   }
 

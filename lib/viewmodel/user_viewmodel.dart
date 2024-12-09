@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:net_chat/app/sign_in/email_sifre_kayit.dart';
 import 'package:net_chat/locator.dart';
 import 'package:net_chat/model/user_model.dart';
 import 'package:net_chat/repository/user_repository.dart';
@@ -8,15 +9,20 @@ enum ViewState { Idle, Busy }
 
 class UserViewmodel with ChangeNotifier implements AuthBase {
   ViewState _state = ViewState.Idle;
-  UserRepository _userRepository = locator<UserRepository>();
+  final UserRepository _userRepository = locator<UserRepository>();
   UserModel? _userModel;
 
-  UserModel? get userModel => this._userModel;
+  String? emailHataMesaji = null;  // nullable null yapmak icin böyle yaptik yoksa string null olmuyo 
+  String? sifreHataMesaji = null;  // nullable
 
-  get state => this._state;
+
+
+  UserModel? get userModel => _userModel;
+
+  get state => _state;
 
   set state(value) {
-    this._state = value;
+    _state = value;
     notifyListeners();
   }
 
@@ -31,7 +37,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       _userModel = await _userRepository.currentUser();
       return _userModel;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;
@@ -45,7 +51,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       _userModel = await _userRepository.signInAnonymously();
       return _userModel;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;
@@ -60,7 +66,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       _userModel = null;
       return sonuc;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return false;
     } finally {
       state = ViewState.Idle;
@@ -74,7 +80,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       _userModel = await _userRepository.singInWithGoogle();
       return _userModel;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;
@@ -85,12 +91,17 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   Future<UserModel?> createWithEmailAndPassword(
       String email, String password) async {
     try {
-      state = ViewState.Busy;
-      _userModel =
-          await _userRepository.createWithEmailAndPassword(email, password);
-      return _userModel;
+      
+      if(_emailSifreKontrol(email, password)){
+        state = ViewState.Busy;
+        _userModel =
+            await _userRepository.createWithEmailAndPassword(email, password);
+        return _userModel;
+      }else return null;
+
+
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;
@@ -101,15 +112,43 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   Future<UserModel?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
-      state = ViewState.Busy;
-      _userModel =
-          await _userRepository.signInWithEmailAndPassword(email, password);
-      return _userModel;
+
+      if(_emailSifreKontrol(email, password)){
+        state = ViewState.Busy;
+        _userModel =
+            await _userRepository.signInWithEmailAndPassword(email, password);
+        return _userModel;
+      }else return null;
+
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: " + e.toString());
+      debugPrint("ViewModel currentUser Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;
     }
   }
+
+
+  bool _emailSifreKontrol(String email, String password){ // sifre yerine password olabilridi
+
+    var sonuc = true;
+
+    if(password.length < 6){
+      sifreHataMesaji = "En az alti karakter olmali";
+      sonuc = false;
+    }else {
+      sifreHataMesaji = null;
+    }
+    if(!email.contains('@')){
+      emailHataMesaji = "Gecersin email adresi";
+      sonuc = false;
+    }else{
+      emailHataMesaji = null;
+    }
+
+    return sonuc;
+  }
+
+
+
 }

@@ -6,13 +6,15 @@ import 'package:net_chat/viewmodel/user_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class SignInPage extends StatelessWidget {
+  const SignInPage({super.key});
+
   void _misafirGirisi(BuildContext context) async {
-    final _userViewModel = Provider.of<UserViewmodel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewmodel>(context, listen: false);
 
     try {
-      UserModel? _user = await _userViewModel.signInAnonymously();
-      if (_user != null) {
-        print("Kullanıcı id : ${_user.userID}");
+      UserModel? user = await userViewModel.signInAnonymously();
+      if (user != null) {
+        print("Kullanıcı id : ${user.userID}");
       } else {
         print("Kullanıcı girişi başarısız");
       }
@@ -22,12 +24,12 @@ class SignInPage extends StatelessWidget {
   }
 
   void _googleIleGiris(BuildContext context) async {
-    final _userViewModel = Provider.of<UserViewmodel>(context, listen: false);
+    final userViewModel = Provider.of<UserViewmodel>(context, listen: false);
 
     try {
-      UserModel? _user = await _userViewModel.singInWithGoogle();
-      if (_user != null) {
-        print("Kullanıcı id : ${_user.userID}");
+      UserModel? user = await userViewModel.singInWithGoogle();
+      if (user != null) {
+        print("Kullanıcı id : ${user.userID}");
       } else {
         print("Kullanıcı girişi başarısız");
       }
@@ -38,7 +40,7 @@ class SignInPage extends StatelessWidget {
 
   void _emailVeSifreGiris(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        fullscreenDialog: true, builder: (context) => EmailSifreLoginPage()));
+        fullscreenDialog: true, builder: (context) => const EmailSifreLoginPage()));
   }
 
   @override
@@ -46,7 +48,7 @@ class SignInPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white70, // ana sayfa arka plan rengi
       appBar: AppBar(
-        title: Text("NetChat"),
+        title: const Text("NetChat"),
         centerTitle: true,
         backgroundColor: Colors.blue.shade300,
       ),
@@ -56,7 +58,7 @@ class SignInPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               "Oturum Aç",
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
@@ -81,7 +83,7 @@ class SignInPage extends StatelessWidget {
             SocialLoginButton(
                 buttonText: "E-mail ile Giriş Yap",
                 buttonColor: Colors.purple.shade400,
-                buttonIcon: Icon(Icons.email),
+                buttonIcon: const Icon(Icons.email),
                 textColor: Colors.white,
                 onPressed: () {
                   _emailVeSifreGiris(context);
@@ -89,7 +91,7 @@ class SignInPage extends StatelessWidget {
             SocialLoginButton(
                 buttonText: "Misafir Girişi",
                 buttonColor: Colors.black,
-                buttonIcon: Icon(Icons.email),
+                buttonIcon: const Icon(Icons.email),
                 textColor: Colors.white,
                 onPressed: () {
                   _misafirGirisi(context);

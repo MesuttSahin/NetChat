@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           title: "NetChat",
           debugShowCheckedModeBanner: false,
           theme: ThemeData(primarySwatch: Colors.blue),
-          home: LandingPage()),
+          home: const LandingPage()),
     );
   }
 }

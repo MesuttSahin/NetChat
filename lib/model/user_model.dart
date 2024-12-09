@@ -3,4 +3,12 @@ class UserModel {
   
 
   UserModel({required this.userID});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'userModelID' : userID,
+
+    };
+  }
+
 }

@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "220003709726-oks7lf14btbhn9v3f52f9oha327egks7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "netchat.com.mmt.net_chat",
+            "certificate_hash": "a853268943b931dea52fc658458bb81ccf1871e2"
+          }
+        },
+        {
           "client_id": "220003709726-21tt95nggbcehbct0cnelf1ki5qfp97f.apps.googleusercontent.com",
           "client_type": 3
         }
