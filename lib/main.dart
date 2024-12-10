@@ -6,7 +6,6 @@ import 'package:net_chat/viewmodel/user_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  // Firebase'i başlatmak için bu satır gereklidir
   setUpLocator();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Firebase'i başlatıyoruz

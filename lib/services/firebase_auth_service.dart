@@ -22,7 +22,7 @@ class FirebaseAuthService implements AuthBase {
   // Firebase User'dan UserModel'e dönüşüm yapacak metod
   UserModel? _userModelFromFirebase(User? user) {
     if (user == null) return null;
-    return UserModel(userID: user.uid);
+    return UserModel(userID: user.uid,email: user.email!); // buraya dikkat et null olamaz dedim çünkü
   }
 
   @override

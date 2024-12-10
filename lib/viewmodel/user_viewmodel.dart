@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:net_chat/app/sign_in/email_sifre_kayit.dart';
 import 'package:net_chat/locator.dart';
 import 'package:net_chat/model/user_model.dart';
 import 'package:net_chat/repository/user_repository.dart';
@@ -12,10 +11,9 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   final UserRepository _userRepository = locator<UserRepository>();
   UserModel? _userModel;
 
-  String? emailHataMesaji = null;  // nullable null yapmak icin böyle yaptik yoksa string null olmuyo 
-  String? sifreHataMesaji = null;  // nullable
-
-
+  String? emailHataMesaji =
+      null; // nullable null yapmak icin böyle yaptik yoksa string null olmuyo
+  String? sifreHataMesaji = null; // nullable
 
   UserModel? get userModel => _userModel;
 
@@ -91,15 +89,13 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   Future<UserModel?> createWithEmailAndPassword(
       String email, String password) async {
     try {
-      
-      if(_emailSifreKontrol(email, password)){
+      if (_emailSifreKontrol(email, password)) {
         state = ViewState.Busy;
         _userModel =
             await _userRepository.createWithEmailAndPassword(email, password);
         return _userModel;
-      }else return null;
-
-
+      } else
+        return null;
     } catch (e) {
       debugPrint("ViewModel currentUser Hata: $e");
       return null;
@@ -112,14 +108,13 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   Future<UserModel?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
-
-      if(_emailSifreKontrol(email, password)){
+      if (_emailSifreKontrol(email, password)) {
         state = ViewState.Busy;
         _userModel =
             await _userRepository.signInWithEmailAndPassword(email, password);
         return _userModel;
-      }else return null;
-
+      } else
+        return null;
     } catch (e) {
       debugPrint("ViewModel currentUser Hata: $e");
       return null;
@@ -128,27 +123,24 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     }
   }
 
-
-  bool _emailSifreKontrol(String email, String password){ // sifre yerine password olabilridi
+  bool _emailSifreKontrol(String email, String password) {
+    // sifre yerine password olabilridi
 
     var sonuc = true;
 
-    if(password.length < 6){
-      sifreHataMesaji = "En az alti karakter olmali";
+    if (password.length < 6) {
+      sifreHataMesaji = "En az 6 karakter olmalı";
       sonuc = false;
-    }else {
+    } else {
       sifreHataMesaji = null;
     }
-    if(!email.contains('@')){
-      emailHataMesaji = "Gecersin email adresi";
+    if (!email.contains('@')) {
+      emailHataMesaji = "Geçersiz e-mail adresi";
       sonuc = false;
-    }else{
+    } else {
       emailHataMesaji = null;
     }
 
     return sonuc;
   }
-
-
-
 }

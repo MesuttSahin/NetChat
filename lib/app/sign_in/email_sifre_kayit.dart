@@ -89,9 +89,12 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
                   child: Column(
                     children: [
                       TextFormField(
+                        initialValue: "xxx@example.com",
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                          errorText: userViewModel.emailHataMesaji != null ? userViewModel.emailHataMesaji : null,
+                          errorText: userViewModel.emailHataMesaji != null
+                              ? userViewModel.emailHataMesaji
+                              : null,
                           prefixIcon: const Icon(Icons.mail),
                           hintText: "Email",
                           label: const Text("Email"),
@@ -103,9 +106,12 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
+                        initialValue: "11111111",
                         obscureText: true,
                         decoration: InputDecoration(
-                          errorText: userViewModel.sifreHataMesaji != null ? userViewModel.sifreHataMesaji : null,
+                          errorText: userViewModel.sifreHataMesaji != null
+                              ? userViewModel.sifreHataMesaji
+                              : null,
                           prefixIcon: Icon(Icons.password),
                           hintText: "Password",
                           label: Text("Password"),
