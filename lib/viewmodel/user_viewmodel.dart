@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:net_chat/locator.dart';
-import 'package:net_chat/model/user_model.dart';
+import 'package:net_chat/model/user.dart';
 import 'package:net_chat/repository/user_repository.dart';
 import 'package:net_chat/services/auth_base.dart';
 
@@ -88,20 +88,18 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   @override
   Future<UserModel?> createWithEmailAndPassword(
       String email, String password) async {
-    try {
       if (_emailSifreKontrol(email, password)) {
-        state = ViewState.Busy;
-        _userModel =
-            await _userRepository.createWithEmailAndPassword(email, password);
-        return _userModel;
+        try{
+          state = ViewState.Busy;
+          _userModel =
+              await _userRepository.createWithEmailAndPassword(email, password);
+          return _userModel;
+        }finally{
+          state = ViewState.Idle;
+        }
       } else
         return null;
-    } catch (e) {
-      debugPrint("ViewModel currentUser Hata: $e");
-      return null;
-    } finally {
-      state = ViewState.Idle;
-    }
+ 
   }
 
   @override
@@ -116,7 +114,7 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
       } else
         return null;
     } catch (e) {
-      debugPrint("ViewModel currentUser Hata: $e");
+      debugPrint("ViewModeldeki signInWithEmailAndPassword Hata: $e");
       return null;
     } finally {
       state = ViewState.Idle;

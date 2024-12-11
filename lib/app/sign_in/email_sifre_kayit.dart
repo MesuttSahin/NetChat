@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:net_chat/app/hata_exception.dart';
 import 'package:net_chat/app/home_page.dart';
+import 'package:net_chat/common_widget/platform_duyarli_alert_dialog.dart';
 import 'package:net_chat/common_widget/social_login_button.dart';
-import 'package:net_chat/model/user_model.dart';
+import 'package:net_chat/model/user.dart';
 import 'package:net_chat/viewmodel/user_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -27,21 +30,32 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
       final userModel = Provider.of<UserViewmodel>(context, listen: false);
 
       if (_formType == FormType.LOGIN) {
-        if (_email != null && _password != null) {
+        try{
+                  if (_email != null && _password != null) {
           UserModel? girisYapanUser =
               await userModel.signInWithEmailAndPassword(_email!, _password!);
           if (girisYapanUser != null) {
             print("Oturum açan user: ${girisYapanUser.userID}");
           }
         }
+        }on PlatformException catch (e){
+          debugPrint("Widget oturum acma hata yakalandi" + e.code.toString());
+        }
       } else {
-        if (_email != null && _password != null) {
+       try{
+         if (_email != null && _password != null) {
           UserModel? olusturulanUser =
               await userModel.createWithEmailAndPassword(_email!, _password!);
           if (olusturulanUser != null) {
             print("Kayıt olan user: ${olusturulanUser.userID}");
           }
         }
+       }on PlatformException catch(e){
+          PlatformDuyarliAlertDialog(
+          baslik: "Kullanıcı Oluşturma Hata",
+            icerik: Hatalar.goster(e.code),
+            anaButonYazisi: 'Tamam',iptalButonYazisi: 'İptal',).goster(context);
+       }
       }
     } else {
       print('Form hatalı');

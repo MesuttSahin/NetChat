@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:net_chat/model/user_model.dart';
+import 'package:net_chat/model/user.dart';
 import 'package:net_chat/services/auth_base.dart';
 
 class FirebaseAuthService implements AuthBase {
@@ -91,14 +91,10 @@ class FirebaseAuthService implements AuthBase {
   @override
   Future<UserModel?> createWithEmailAndPassword(
       String email, String password) async {
-    try {
+
       UserCredential sonuc = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       return _userModelFromFirebase(sonuc.user);
-    } catch (e) {
-      print("firebase hatası: $e");
-      return null;
-    }
   }
 
   @override
@@ -109,7 +105,7 @@ class FirebaseAuthService implements AuthBase {
           email: email, password: password);
       return _userModelFromFirebase(sonuc.user);
     } catch (e) {
-      print(e);
+      print("firebase auth servise oturum acma hata" + e.toString());
       return null;
     }
   }

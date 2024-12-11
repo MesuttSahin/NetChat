@@ -7,11 +7,13 @@ class MyCustomButtomNavigation extends StatelessWidget {
       {super.key,
       required this.currentTab,
       required this.onSelectedTab,
-      required this.sayfaOlusturucu});
+      required this.sayfaOlusturucu,
+      required this.navigatorKeys});
 
   final TabItem currentTab;
   final ValueChanged<TabItem> onSelectedTab;
   final Map<TabItem, Widget> sayfaOlusturucu;
+  final Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,13 @@ class MyCustomButtomNavigation extends StatelessWidget {
       ),
       tabBuilder: (context, index) {
         final gosterilecekItem = TabItem.values[index];
-        return CupertinoTabView(builder: (context) {
+        return CupertinoTabView(
+
+          navigatorKey: navigatorKeys[gosterilecekItem],
+          
+          
+          
+          builder: (context) {
           return sayfaOlusturucu[gosterilecekItem] ??
               Center(
                 child: Text("404 NOT FOUND"),

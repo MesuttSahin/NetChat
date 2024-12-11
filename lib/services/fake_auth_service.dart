@@ -1,4 +1,4 @@
-import 'package:net_chat/model/user_model.dart';
+import 'package:net_chat/model/user.dart';
 import 'package:net_chat/services/auth_base.dart';
 
 

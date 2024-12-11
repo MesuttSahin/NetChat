@@ -1,5 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+// user_model.dart => user.dart
 class UserModel {
   final String userID;
   String email;
@@ -15,7 +17,7 @@ class UserModel {
     return {
       'userID': userID,
       'email': email,
-      'userName': userName ?? "",
+      'userName': userName ??  email.substring(0, email.indexOf('@')) + randomSayiUret(),
       'profilURL': profilURL ?? "",
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'updatedAt': updatedAt ?? FieldValue.serverTimestamp(),
@@ -47,6 +49,12 @@ String toString() {
       '  updatedAt: ${updatedAt != null ? updatedAt!.toLocal() : "Not Set"},\n'
       '  seviye: ${seviye ?? "Not Set"}\n'
       '}';
+}
+
+String randomSayiUret(){
+
+  int rastgeleSayi = Random().nextInt(999999);
+  return rastgeleSayi.toString();
 }
   
 

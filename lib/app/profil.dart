@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:net_chat/common_widget/platform_duyarli_alert_dialog.dart';
+import 'package:net_chat/viewmodel/user_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class ProfilPage extends StatelessWidget {
   const ProfilPage({super.key});
@@ -12,10 +15,31 @@ class ProfilPage extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue,
+        actions: <Widget>[
+          TextButton(onPressed: () => _cikisIcinOnayIste(context), child: Text("Çıkış", style: TextStyle(color: Colors.white, fontSize: 18),))
+        ],
       ),
       body: Center(
         child: Text("Profil Sayfası"),
       ),
     );
+  }
+  Future<bool> _cikisYap(BuildContext context) async {
+    final userViewModel = Provider.of<UserViewmodel>(context, listen: false);
+    var sonuc = await userViewModel.signOut();
+    return sonuc;
+  }
+
+Future _cikisIcinOnayIste(BuildContext context) async {
+    final sonuc = await PlatformDuyarliAlertDialog(
+      baslik: "Emin Misiniz?",
+      icerik: "Çıkmak istediğinizden emin misiniz?",
+      anaButonYazisi: "Evet",
+      iptalButonYazisi: "Vazgeç",
+    ).goster(context);
+
+    if (sonuc == true) {
+      _cikisYap(context);
+    }
   }
 }

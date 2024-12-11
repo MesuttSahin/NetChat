@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:net_chat/model/user_model.dart';
+import 'package:net_chat/model/user.dart';
 import 'package:net_chat/services/database_base.dart';
 
 class FirestoreDbService implements DBBase {
-  final FirebaseFirestore _firebaseAuth =
+  final FirebaseFirestore _firebaseDB =
       FirebaseFirestore.instance; // Firestore degil artik
 
   @override
   Future<bool> saveUser(UserModel userModel) async {
-    await _firebaseAuth
+    await _firebaseDB
         .collection("userModels")
         .doc(userModel.userID)
         .set(userModel.toMap());
@@ -24,4 +24,24 @@ class FirestoreDbService implements DBBase {
 
     return true;
   }
+  
+@override
+Future<UserModel> readUser(String userID) async {
+DocumentSnapshot _okunanUser = await _firebaseDB.collection("userModels").doc(userID).get();
+
+
+  // Null kontrolü yapılarak data() güvenli şekilde işleniyor
+  Map<String, dynamic>? _okunanUserBilgileriMap =
+      _okunanUser.data() as Map<String, dynamic>?;
+
+  if (_okunanUserBilgileriMap != null) {
+    UserModel _okunanUserNesnesi =
+        UserModel.fromMap(_okunanUserBilgileriMap);
+    print("Okunan user nesnesi : " + _okunanUserNesnesi.toString());
+    return _okunanUserNesnesi;
+  } else {
+    throw Exception("Kullanıcı bulunamadı.");
+  }
+}
+
 }

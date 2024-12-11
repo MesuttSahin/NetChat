@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:net_chat/app/sign_in/email_sifre_kayit.dart';
 import 'package:net_chat/common_widget/social_login_button.dart';
-import 'package:net_chat/model/user_model.dart';
+import 'package:net_chat/model/user.dart';
 import 'package:net_chat/viewmodel/user_viewmodel.dart';
 import 'package:provider/provider.dart';
 
