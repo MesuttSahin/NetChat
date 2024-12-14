@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
 import 'package:net_chat/locator.dart';
 import 'package:net_chat/model/user.dart';
@@ -71,6 +73,11 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     }
   }
 
+  Future<List<UserModel>> getAllUser() async {
+    var tumKullaniciListesi = await _userRepository.getAllUser();
+    return tumKullaniciListesi;
+  }
+
   @override
   Future<UserModel?> singInWithGoogle() async {
     try {
@@ -88,18 +95,17 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
   @override
   Future<UserModel?> createWithEmailAndPassword(
       String email, String password) async {
-      if (_emailSifreKontrol(email, password)) {
-        try{
-          state = ViewState.Busy;
-          _userModel =
-              await _userRepository.createWithEmailAndPassword(email, password);
-          return _userModel;
-        }finally{
-          state = ViewState.Idle;
-        }
-      } else
-        return null;
- 
+    if (_emailSifreKontrol(email, password)) {
+      try {
+        state = ViewState.Busy;
+        _userModel =
+            await _userRepository.createWithEmailAndPassword(email, password);
+        return _userModel;
+      } finally {
+        state = ViewState.Idle;
+      }
+    } else
+      return null;
   }
 
   @override
@@ -113,9 +119,6 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
         return _userModel;
       } else
         return null;
-    } catch (e) {
-      debugPrint("ViewModeldeki signInWithEmailAndPassword Hata: $e");
-      return null;
     } finally {
       state = ViewState.Idle;
     }
@@ -141,4 +144,23 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
 
     return sonuc;
   }
+
+  Future<bool> updateUserName(String userID, String yeniUserName) async {
+    var sonuc = await _userRepository.updateUserName(userID, yeniUserName);
+    if (sonuc) {
+      _userModel!.userName = yeniUserName;
+    }
+    return sonuc;
+  }
+
+  Future<String> uploadFile(
+      String? userID, String fileType, XFile? profilFoto) async {
+    // XFile'ı File'a dönüştür
+    File? fileToUpload = profilFoto != null ? File(profilFoto.path) : null;
+
+    var indirmeLinki = await _userRepository.uploadFile(
+        userID, fileType, fileToUpload as XFile?);
+
+    return indirmeLinki;
+  } // Profildeki controller çalışmadığı için çalışmadı
 }

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "220003709726",
+    "firebase_url": "https://netchat-ac3f5-default-rtdb.firebaseio.com",
     "project_id": "netchat-ac3f5",
     "storage_bucket": "netchat-ac3f5.firebasestorage.app"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "220003709726-0dmr9tfv3uh64ae14njevkb0bi4tt9b7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "netchat.com.mmt.net_chat",
+            "certificate_hash": "46a0a44531605edf17b32a142284e007e40f601a"
+          }
+        },
         {
           "client_id": "220003709726-alriaela955suit51fvgvfrlhkqe0u3j.apps.googleusercontent.com",
           "client_type": 1,

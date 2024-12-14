@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:cross_file/cross_file.dart';
 import 'package:net_chat/locator.dart';
 import 'package:net_chat/model/user.dart';
 import 'package:net_chat/services/auth_base.dart';
 import 'package:net_chat/services/fake_auth_service.dart';
 import 'package:net_chat/services/firebase_auth_service.dart';
+import 'package:net_chat/services/firebase_storage_service.dart';
 import 'package:net_chat/services/firestore_db_service.dart';
 
 enum AppMode { DEBUG, RELEASE }
@@ -13,6 +15,8 @@ class UserRepository implements AuthBase {
       locator<FirebaseAuthService>();
   final FakeAuthService _fakeAuthService = locator<FakeAuthService>();
   final FirestoreDbService _firestoreDbService = locator<FirestoreDbService>();
+  final FirebaseStorageService _firebaseStorageService =
+      locator<FirebaseStorageService>();
 
   AppMode appMode = AppMode.RELEASE;
 
@@ -21,7 +25,9 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.DEBUG) {
       return await _fakeAuthService.currentUser();
     } else {
-      return await _firebaseAuthService.currentUser();
+      UserModel? _userModel = await _firebaseAuthService.currentUser();
+      return await _firestoreDbService
+          .readUser(_userModel!.userID); // Hata cikarsa buraya bakmak lazim
     }
   }
 
@@ -48,32 +54,30 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.DEBUG) {
       return await _fakeAuthService.singInWithGoogle();
     } else {
-      UserModel? _userModel = await _firebaseAuthService
-          .singInWithGoogle();
+      UserModel? _userModel = await _firebaseAuthService.singInWithGoogle();
       bool _sonuc = await _firestoreDbService
           .saveUser(_userModel!); // Hata cikarsa buraya bakmak lazim
       if (_sonuc) {
         return await _firestoreDbService.readUser(_userModel.userID);
       } else
-          return null;
+        return null;
     }
   }
 
   @override
   Future<UserModel?> createWithEmailAndPassword(
       String email, String password) async {
-      if (appMode == AppMode.DEBUG) {
-        return await _fakeAuthService.createWithEmailAndPassword(email, password);
-      } else {
-
-          UserModel? _userModel = await _firebaseAuthService
-              .createWithEmailAndPassword(email, password);
-          bool _sonuc = await _firestoreDbService
-              .saveUser(_userModel!); // Hata cikarsa buraya bakmak lazim
-          if (_sonuc) {
-            return await _firestoreDbService.readUser(_userModel.userID);
-          } else
-              return null;
+    if (appMode == AppMode.DEBUG) {
+      return await _fakeAuthService.createWithEmailAndPassword(email, password);
+    } else {
+      UserModel? _userModel = await _firebaseAuthService
+          .createWithEmailAndPassword(email, password);
+      bool _sonuc = await _firestoreDbService
+          .saveUser(_userModel!); // Hata cikarsa buraya bakmak lazim
+      if (_sonuc) {
+        return await _firestoreDbService.readUser(_userModel.userID);
+      } else
+        return null;
     }
   }
 
@@ -83,14 +87,38 @@ class UserRepository implements AuthBase {
     if (appMode == AppMode.DEBUG) {
       return await _fakeAuthService.signInWithEmailAndPassword(email, password);
     } else {
-      try{
-          UserModel? _userModel = await _firebaseAuthService.signInWithEmailAndPassword(
-          email, password);
-          return await _firestoreDbService.readUser(_userModel!.userID);
-      }catch(e){
-        debugPrint("repoda signinuser kisminda hata var"+ e.toString());
-      }
-       
+      UserModel? _userModel = await _firebaseAuthService
+          .signInWithEmailAndPassword(email, password);
+      return await _firestoreDbService.readUser(_userModel!.userID);
+    }
+  }
+
+  Future<bool> updateUserName(String userID, String yeniUserName) async {
+    if (appMode == AppMode.DEBUG) {
+      return false;
+    } else {
+      return await _firestoreDbService.updateUserName(userID, yeniUserName);
+    }
+  }
+
+  Future<String> uploadFile(
+      String? userID, String fileType, XFile? profilFoto) async {
+    if (appMode == AppMode.DEBUG) {
+      return "dosya indirme linki";
+    } else {
+      var profilFotoURL = await _firebaseStorageService.uploadFile(
+          userID ?? 'default', fileType, profilFoto as File);
+      await _firestoreDbService.updateProfilFoto(userID, profilFotoURL);
+      return profilFotoURL;
+    }
+  }
+
+  Future<List<UserModel>> getAllUser() async {
+    if (appMode == AppMode.DEBUG) {
+      return [];
+    } else {
+      var tumKullaniciListesi = await _firestoreDbService.getAllUser();
+      return tumKullaniciListesi;
     }
   }
 }

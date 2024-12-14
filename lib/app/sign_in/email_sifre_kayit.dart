@@ -30,32 +30,39 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
       final userModel = Provider.of<UserViewmodel>(context, listen: false);
 
       if (_formType == FormType.LOGIN) {
-        try{
-                  if (_email != null && _password != null) {
-          UserModel? girisYapanUser =
-              await userModel.signInWithEmailAndPassword(_email!, _password!);
-          if (girisYapanUser != null) {
-            print("Oturum açan user: ${girisYapanUser.userID}");
+        try {
+          if (_email != null && _password != null) {
+            UserModel? girisYapanUser =
+                await userModel.signInWithEmailAndPassword(_email!, _password!);
+            if (girisYapanUser != null) {
+              print("Oturum açan user: ${girisYapanUser.userID}");
+            }
           }
-        }
-        }on PlatformException catch (e){
-          debugPrint("Widget oturum acma hata yakalandi" + e.code.toString());
+        } on PlatformException catch (e) {
+          PlatformDuyarliAlertDialog(
+            baslik: "Oturum acmada HATA",
+            icerik: Hatalar.goster(e.code),
+            anaButonYazisi: 'Tamam',
+            iptalButonYazisi: 'İptal',
+          ).goster(context);
         }
       } else {
-       try{
-         if (_email != null && _password != null) {
-          UserModel? olusturulanUser =
-              await userModel.createWithEmailAndPassword(_email!, _password!);
-          if (olusturulanUser != null) {
-            print("Kayıt olan user: ${olusturulanUser.userID}");
+        try {
+          if (_email != null && _password != null) {
+            UserModel? olusturulanUser =
+                await userModel.createWithEmailAndPassword(_email!, _password!);
+            if (olusturulanUser != null) {
+              print("Kayıt olan user: ${olusturulanUser.userID}");
+            }
           }
-        }
-       }on PlatformException catch(e){
+        } on PlatformException catch (e) {
           PlatformDuyarliAlertDialog(
-          baslik: "Kullanıcı Oluşturma Hata",
+            baslik: "Kullanıcı Oluşturma Hata",
             icerik: Hatalar.goster(e.code),
-            anaButonYazisi: 'Tamam',iptalButonYazisi: 'İptal',).goster(context);
-       }
+            anaButonYazisi: 'Tamam',
+            iptalButonYazisi: 'İptal',
+          ).goster(context);
+        }
       }
     } else {
       print('Form hatalı');

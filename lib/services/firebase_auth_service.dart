@@ -21,8 +21,14 @@ class FirebaseAuthService implements AuthBase {
 
   // Firebase User'dan UserModel'e dönüşüm yapacak metod
   UserModel? _userModelFromFirebase(User? user) {
-    if (user == null) return null;
-    return UserModel(userID: user.uid,email: user.email!); // buraya dikkat et null olamaz dedim çünkü
+    if (user == null) {
+      return null;
+    } else {
+      return UserModel(userID: user.uid, email: user.email.toString());
+      /*UserModel(
+          userID: user.uid,
+          email: user.email!);*/ // buraya dikkat et null olamaz dedim çünkü
+    }
   }
 
   @override
@@ -91,22 +97,16 @@ class FirebaseAuthService implements AuthBase {
   @override
   Future<UserModel?> createWithEmailAndPassword(
       String email, String password) async {
-
-      UserCredential sonuc = await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      return _userModelFromFirebase(sonuc.user);
+    UserCredential sonuc = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
+    return _userModelFromFirebase(sonuc.user);
   }
 
   @override
   Future<UserModel?> signInWithEmailAndPassword(
       String email, String password) async {
-    try {
-      UserCredential sonuc = await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
-      return _userModelFromFirebase(sonuc.user);
-    } catch (e) {
-      print("firebase auth servise oturum acma hata" + e.toString());
-      return null;
-    }
+    UserCredential sonuc = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
+    return _userModelFromFirebase(sonuc.user);
   }
 }

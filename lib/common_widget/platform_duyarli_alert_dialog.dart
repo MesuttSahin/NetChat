@@ -17,17 +17,17 @@ class PlatformDuyarliAlertDialog extends PlatformDuyarliWidget {
     required this.iptalButonYazisi, // 'required' eklendi
   });
 
-Future<bool> goster(BuildContext context) async {
-  return Platform.isIOS
-      ? await showCupertinoDialog<bool>(
-              context: context, builder: (context) => this) ??
-          false // Eğer null dönerse false ata
-      : await showDialog<bool>(
-              context: context,
-              builder: (context) => this,
-              barrierDismissible: false) ??
-          false; // Eğer null dönerse false ata
-}
+  Future<bool> goster(BuildContext context) async {
+    return Platform.isAndroid
+        ? await showCupertinoDialog<bool>(
+                context: context, builder: (context) => this) ??
+            false // Eğer null dönerse false ata
+        : await showDialog<bool>(
+                context: context,
+                builder: (context) => this,
+                barrierDismissible: false) ??
+            false; // Eğer null dönerse false ata
+  }
 
   @override
   Widget buildAndroidWidget(BuildContext context) {
@@ -50,7 +50,7 @@ Future<bool> goster(BuildContext context) async {
   List<Widget> _dialogButonlariniAyarla(BuildContext context) {
     final tumButonlar = <Widget>[];
 
-    if (Platform.isIOS) {
+    if (Platform.isAndroid) {
       if (iptalButonYazisi != null) {
         tumButonlar.add(
           CupertinoDialogAction(
