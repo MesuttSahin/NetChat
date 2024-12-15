@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:net_chat/model/mesaj.dart';
 import 'package:net_chat/model/user.dart';
 import 'package:net_chat/services/database_base.dart';
 
@@ -71,51 +72,86 @@ class FirestoreDbService implements DBBase {
   @override
   Future<List<UserModel>> getAllUser() async {
     try {
-      // Firebase'den verileri alıyoruz.
       QuerySnapshot querySnapshot =
           await _firebaseDB.collection("userModels").get();
-
-      // Debug için querySnapshot'taki dökümanları yazdıralım.
       print("Toplam döküman sayısı: ${querySnapshot.docs.length}");
-
-      // Kullanıcı listesini tutmak için bir liste oluşturuyoruz.
-      List<UserModel> userList = [];
-
-      // Her bir kullanıcıyı döngüyle işliyoruz.
+      List<UserModel> tumKullanicilar = [];
       for (DocumentSnapshot tekUser in querySnapshot.docs) {
-        print("Okunan user: " + tekUser.data().toString());
-
-        // Firebase'den alınan veriyi UserModel'e doğrudan dönüştürüyoruz.
+        // UserModel _tekUser =
+        //     UserModel.fromMap(tekUser.data() as Map<String, dynamic>);
         var userData = tekUser.data() as Map<String, dynamic>;
-
         // Veriyi constructor ile doğrudan UserModel'e aktarıyoruz.
         UserModel userModel = UserModel(
-          userID: userData['userID'],
-          email: userData['email'],
-        );
+            userID: userData['userID'],
+            email: userData['email'],
+            userName: userData['userName']);
 
         // Kullanıcıyı listeye ekliyoruz.
-        userList.add(userModel);
+        tumKullanicilar.add(userModel);
       }
 
       // Eğer kullanıcı listesi boşsa, hata fırlatıyoruz.
-      if (userList.isEmpty) {
+      if (tumKullanicilar.isEmpty) {
         print("Kullanıcı bulunamadı.");
         throw Exception("Kullanıcı bulunamadı.");
       }
 
       // Debug console'da tüm kullanıcıları yazdıralım.
-      print("Toplam Kullanıcı Sayısı: ${userList.length}");
-      userList.forEach((user) {
+      print("Toplam Kullanıcı Sayısı: ${tumKullanicilar.length}");
+      tumKullanicilar.forEach((user) {
         print("Kullanıcı ID: ${user.userID}, Kullanıcı email: ${user.email}");
       });
 
-      // Sonuç olarak kullanıcı listesini döndürüyoruz.
-      return userList;
+      /*tumKullanicilar = querySnapshot.docs
+          .map((tekSatir) =>
+              UserModel.fromMap(tekSatir.data() as Map<String, dynamic>))
+          .toList();
+      // Sonuç olarak kullanıcı listesini döndürüyoruz.*/
+
+      return tumKullanicilar;
     } catch (e) {
       // Hata mesajını yazdırıyoruz.
       print("Hata: $e");
       throw e; // Hata fırlatıyoruz.
     }
+  }
+
+  @override
+  Stream<List<Mesaj>> getMessages(
+      String currentUserID, String sohbetEdilenUserID) {
+    var snapShot = _firebaseDB
+        .collection("konusmalar")
+        .doc(currentUserID + "--" + sohbetEdilenUserID)
+        .collection("mesajlar")
+        .orderBy("date",descending: true)
+        .snapshots();
+    return snapShot.map((mesajListesi) =>
+        mesajListesi.docs.map((mesaj) => Mesaj.fromMap(mesaj.data())).toList());
+  }
+
+  Future<bool> saveMessage(Mesaj kaydedilecekMesaj) async {
+    var _mesajID = _firebaseDB.collection("konusmalar").doc().id;
+    var _myDocumentID =
+        kaydedilecekMesaj.kimden + "--" + kaydedilecekMesaj.kime;
+    var _receiverDocumentID =
+        kaydedilecekMesaj.kime + "--" + kaydedilecekMesaj.kimden;
+    var _kaydedilecekMesajMapYapisi = kaydedilecekMesaj.toMap();
+
+    await _firebaseDB
+        .collection("konusmalar")
+        .doc(_myDocumentID)
+        .collection("mesajlar")
+        .doc(_mesajID)
+        .set(_kaydedilecekMesajMapYapisi);
+    _kaydedilecekMesajMapYapisi.update("bendenMi", (deger) => false);
+
+    await _firebaseDB
+        .collection("konusmalar")
+        .doc(_receiverDocumentID)
+        .collection("mesajlar")
+        .doc(_mesajID)
+        .set(_kaydedilecekMesajMapYapisi);
+
+    return true;
   }
 }

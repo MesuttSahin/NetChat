@@ -24,7 +24,8 @@ class FirebaseAuthService implements AuthBase {
     if (user == null) {
       return null;
     } else {
-      return UserModel(userID: user.uid, email: user.email.toString());
+      return UserModel(
+          userID: user.uid, email: user.email.toString(), userName: '');
       /*UserModel(
           userID: user.uid,
           email: user.email!);*/ // buraya dikkat et null olamaz dedim çünkü

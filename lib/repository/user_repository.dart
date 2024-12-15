@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cross_file/cross_file.dart';
 import 'package:net_chat/locator.dart';
+import 'package:net_chat/model/mesaj.dart';
 import 'package:net_chat/model/user.dart';
 import 'package:net_chat/services/auth_base.dart';
 import 'package:net_chat/services/fake_auth_service.dart';
@@ -119,6 +120,23 @@ class UserRepository implements AuthBase {
     } else {
       var tumKullaniciListesi = await _firestoreDbService.getAllUser();
       return tumKullaniciListesi;
+    }
+  }
+
+  Stream<List<Mesaj>> getMessages(
+      String currentUserID, String sohbetEdilenUserID) {
+    if (appMode == AppMode.DEBUG) {
+      return Stream.empty();
+    } else {
+      return _firestoreDbService.getMessages(currentUserID, sohbetEdilenUserID);
+    }
+  }
+
+  Future<bool> saveMessage(Mesaj kaydedilecekMesaj) async{
+    if (appMode == AppMode.DEBUG) {
+      return true;
+    } else {
+      return _firestoreDbService.saveMessage(kaydedilecekMesaj);
     }
   }
 }

@@ -8,12 +8,12 @@ class FakeAuthService implements AuthBase {
 
   @override
   Future<UserModel?> currentUser() async {  
-    return await Future.value(UserModel(userID: userID,email: "fakeUser@example.com"));
+    return await Future.value(UserModel(userID: userID,email: "fakeUser@example.com", userName: 'fakeUser'));
   }
 
   @override
   Future<UserModel?> signInAnonymously() async { 
-    return await Future.delayed(const Duration(seconds: 2), () => UserModel(userID: userID,email: "fakeUser@example.com"));
+    return await Future.delayed(const Duration(seconds: 2), () => UserModel(userID: userID,email: "fakeUser@example.com", userName: 'fakeUser'));
   }
 
   @override
@@ -23,19 +23,19 @@ class FakeAuthService implements AuthBase {
   
   @override
   Future<UserModel> singInWithGoogle() async{
-    return await Future.delayed(const Duration(seconds: 2), () => UserModel(userID: "google_user_id_123456",email: "fakeUser@example.com")); //facebook icinde ayni mantik
+    return await Future.delayed(const Duration(seconds: 2), () => UserModel(userID: "google_user_id_123456",email: "fakeUser@example.com", userName: 'fakeUser')); //facebook icinde ayni mantik
     
   }
   
   @override
   Future<UserModel?> createWithEmailAndPassword(String email, String password) async {
-    return await Future.delayed(const Duration(seconds: 2), () => UserModel(userID: "created_user_id_123456",email: "fakeUser@example.com"));
+    return await Future.delayed(const Duration(seconds: 2), () => UserModel(userID: "created_user_id_123456",email: "fakeUser@example.com", userName: 'fakeUser'));
    
   }
   
   @override
   Future<UserModel?> signInWithEmailAndPassword(String email, String password) async {
-    return await Future.delayed(const Duration(seconds: 2), () => UserModel(userID: "signIn_user_id_123456",email: "fakeUser@example.com"));
+    return await Future.delayed(const Duration(seconds: 2), () => UserModel(userID: "signIn_user_id_123456",email: "fakeUser@example.com", userName: 'fakeUser'));
    
   }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
 import 'package:net_chat/locator.dart';
+import 'package:net_chat/model/mesaj.dart';
 import 'package:net_chat/model/user.dart';
 import 'package:net_chat/repository/user_repository.dart';
 import 'package:net_chat/services/auth_base.dart';
@@ -162,5 +163,14 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
         userID, fileType, fileToUpload as XFile?);
 
     return indirmeLinki;
-  } // Profildeki controller çalışmadığı için çalışmadı
+  }
+
+  Stream<List<Mesaj>> getMessages(
+      String currentUserID, String sohbetEdilenUserID) {
+    return _userRepository.getMessages(currentUserID, sohbetEdilenUserID);
+  }
+
+  Future<bool> saveMessage(Mesaj kaydedilecekMesaj) {
+    return _userRepository.saveMessage(kaydedilecekMesaj);
+  }
 }
