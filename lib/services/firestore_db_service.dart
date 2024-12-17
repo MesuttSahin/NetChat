@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:net_chat/model/konusma.dart';
 import 'package:net_chat/model/mesaj.dart';
 import 'package:net_chat/model/user.dart';
 import 'package:net_chat/services/database_base.dart';
@@ -72,19 +73,31 @@ class FirestoreDbService implements DBBase {
   @override
   Future<List<UserModel>> getAllUser() async {
     try {
+      // Firestore'dan kullanıcıları alıyoruz.
       QuerySnapshot querySnapshot =
           await _firebaseDB.collection("userModels").get();
+
+      // Verilerin başarılı şekilde alındığını kontrol ediyoruz.
       print("Toplam döküman sayısı: ${querySnapshot.docs.length}");
+
       List<UserModel> tumKullanicilar = [];
+
+      // Her bir kullanıcıyı veritabanından alıyoruz.
       for (DocumentSnapshot tekUser in querySnapshot.docs) {
-        // UserModel _tekUser =
-        //     UserModel.fromMap(tekUser.data() as Map<String, dynamic>);
-        var userData = tekUser.data() as Map<String, dynamic>;
-        // Veriyi constructor ile doğrudan UserModel'e aktarıyoruz.
+        // Veriyi Map'e dönüştürüyoruz.
+        var userData = tekUser.data() as Map<String, dynamic>?;
+
+        // Eğer veri boşsa, bu kullanıcıyı atlıyoruz.
+        if (userData == null) {
+          print("Kullanıcı verisi boş: ${tekUser.id}");
+          continue;
+        }
+
+        // Veriyi UserModel'e dönüştürüyoruz.
         UserModel userModel = UserModel(
-            userID: userData['userID'],
-            email: userData['email'],
-            userName: userData['userName']);
+            userID: userData['userID'] ?? '',
+            email: userData['email'] ?? '',
+            userName: userData['userName'] ?? '');
 
         // Kullanıcıyı listeye ekliyoruz.
         tumKullanicilar.add(userModel);
@@ -96,17 +109,11 @@ class FirestoreDbService implements DBBase {
         throw Exception("Kullanıcı bulunamadı.");
       }
 
-      // Debug console'da tüm kullanıcıları yazdıralım.
+      // Debug console'da tüm kullanıcıları yazdırıyoruz.
       print("Toplam Kullanıcı Sayısı: ${tumKullanicilar.length}");
       tumKullanicilar.forEach((user) {
         print("Kullanıcı ID: ${user.userID}, Kullanıcı email: ${user.email}");
       });
-
-      /*tumKullanicilar = querySnapshot.docs
-          .map((tekSatir) =>
-              UserModel.fromMap(tekSatir.data() as Map<String, dynamic>))
-          .toList();
-      // Sonuç olarak kullanıcı listesini döndürüyoruz.*/
 
       return tumKullanicilar;
     } catch (e) {
@@ -123,8 +130,16 @@ class FirestoreDbService implements DBBase {
         .collection("konusmalar")
         .doc(currentUserID + "--" + sohbetEdilenUserID)
         .collection("mesajlar")
-        .orderBy("date",descending: true)
+        .orderBy("date", descending: true)
         .snapshots();
+
+// Gelen veriyi doğrudan loglayalım
+    snapShot.listen((mesajListesi) {
+      for (var doc in mesajListesi.docs) {
+        print("Mesaj: ${doc.data()}");
+      }
+    });
+
     return snapShot.map((mesajListesi) =>
         mesajListesi.docs.map((mesaj) => Mesaj.fromMap(mesaj.data())).toList());
   }
@@ -137,21 +152,89 @@ class FirestoreDbService implements DBBase {
         kaydedilecekMesaj.kime + "--" + kaydedilecekMesaj.kimden;
     var _kaydedilecekMesajMapYapisi = kaydedilecekMesaj.toMap();
 
-    await _firebaseDB
-        .collection("konusmalar")
-        .doc(_myDocumentID)
-        .collection("mesajlar")
-        .doc(_mesajID)
-        .set(_kaydedilecekMesajMapYapisi);
-    _kaydedilecekMesajMapYapisi.update("bendenMi", (deger) => false);
+    print("Gönderen: " + kaydedilecekMesaj.kimden);
+    print("Alıcı: " + kaydedilecekMesaj.kime);
 
-    await _firebaseDB
-        .collection("konusmalar")
-        .doc(_receiverDocumentID)
-        .collection("mesajlar")
-        .doc(_mesajID)
-        .set(_kaydedilecekMesajMapYapisi);
+    await Future.wait([
+      // Gönderen için mesajı kaydet
+      _firebaseDB
+          .collection("konusmalar")
+          .doc(_myDocumentID)
+          .collection("mesajlar")
+          .doc(_mesajID)
+          .set(_kaydedilecekMesajMapYapisi),
+      _firebaseDB.collection("konusmalar").doc(_myDocumentID).set({
+        "konusma_sahibi": kaydedilecekMesaj.kimden,
+        "kimle_konusuyor": kaydedilecekMesaj.kime,
+        "son_yollanan_mesaj": kaydedilecekMesaj.mesaj,
+        "konusma_goruldu": false,
+        "olusturulma_tarihi": FieldValue.serverTimestamp()
+      }, SetOptions(merge: true)),
+
+      // Alıcı için mesajı kaydet
+      _firebaseDB
+          .collection("konusmalar")
+          .doc(_receiverDocumentID)
+          .collection("mesajlar")
+          .doc(_mesajID)
+          .set(_kaydedilecekMesajMapYapisi
+            ..update("bendenMi", (deger) => false)),
+      _firebaseDB.collection("konusmalar").doc(_receiverDocumentID).set({
+        "konusma_sahibi": kaydedilecekMesaj.kime,
+        "kimle_konusuyor": kaydedilecekMesaj.kimden,
+        "son_yollanan_mesaj": kaydedilecekMesaj.mesaj,
+        "konusma_goruldu": false,
+        "olusturulma_tarihi": FieldValue.serverTimestamp()
+      }, SetOptions(merge: true)),
+    ]);
 
     return true;
   }
+
+  @override
+  Future<List<Konusma>> getAllConversations(String userID) async {
+    try {
+      // await eksikliği düzeltildi
+      QuerySnapshot querySnapshot = await _firebaseDB
+          .collection("konusmalar")
+          .where("konusma_sahibi", isEqualTo: userID)
+          .orderBy("olusturulma_tarihi", descending: true)
+          .get();
+
+      List<Konusma> tumKonusmalar = [];
+
+      for (DocumentSnapshot tekKonusma in querySnapshot.docs) {
+        var konusmaData = tekKonusma.data() as Map<String, dynamic>?;
+        if (konusmaData != null) {
+          Konusma konusma = Konusma.fromMap(konusmaData);
+          tumKonusmalar.add(konusma);
+        }
+      }
+
+      return tumKonusmalar;
+    } catch (e) {
+      print("Konuşmaları alırken hata oluştu: $e");
+      throw e;
+    }
+  }
+
+@override
+Future<DateTime> saatiGoster(String userID) async {
+  await _firebaseDB
+      .collection("server")
+      .doc(userID)
+      .set({"saat": FieldValue.serverTimestamp()});
+
+  var okunanMap = await _firebaseDB.collection("server").doc(userID).get();
+
+  var data = okunanMap.data();
+
+  if (data != null && data.containsKey("saat")) {
+    Timestamp okunanTarih = data["saat"];
+    return okunanTarih.toDate();
+  } else {
+    throw Exception("Saat verisi bulunamadı.");
+  }
+}
+
 }

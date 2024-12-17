@@ -7,18 +7,18 @@ import 'package:net_chat/model/user.dart';
 import 'package:net_chat/viewmodel/user_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class Konusma extends StatefulWidget {
+class SohbetPage extends StatefulWidget {
   final UserModel currentUser;
   final UserModel sohbetEdilenUser;
 
-  const Konusma(
+  const SohbetPage(
       {super.key, required this.currentUser, required this.sohbetEdilenUser});
 
   @override
-  State<Konusma> createState() => _KonusmaState();
+  State<SohbetPage> createState() => _SohbetPageState();
 }
 
-class _KonusmaState extends State<Konusma> {
+class _SohbetPageState extends State<SohbetPage> {
   var _mesajController = TextEditingController();
   ScrollController _scrollController = new ScrollController();
 
@@ -119,7 +119,7 @@ class _KonusmaState extends State<Konusma> {
 
   Widget _konusmaBalonuOlustur(Mesaj oankiMesaj) {
     Color _gelenMesajRenk = Colors.blue;
-    Color _gidenMesajRenk = Theme.of(context).primaryColor;
+    Color _gidenMesajRenk = Colors.purple;
 
     var _saatDakikaDegeri = "";
 

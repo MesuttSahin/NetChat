@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
 import 'package:net_chat/locator.dart';
+import 'package:net_chat/model/konusma.dart';
 import 'package:net_chat/model/mesaj.dart';
 import 'package:net_chat/model/user.dart';
 import 'package:net_chat/repository/user_repository.dart';
@@ -170,7 +171,12 @@ class UserViewmodel with ChangeNotifier implements AuthBase {
     return _userRepository.getMessages(currentUserID, sohbetEdilenUserID);
   }
 
-  Future<bool> saveMessage(Mesaj kaydedilecekMesaj) {
-    return _userRepository.saveMessage(kaydedilecekMesaj);
+  Future<bool> saveMessage(Mesaj kaydedilecekMesaj) async {
+    return await _userRepository.saveMessage(kaydedilecekMesaj);
+  }
+
+  Future<List<Konusma>> getAllConversations(String userID) async {
+    print("viewmodel userıd: " + userID);
+    return await _userRepository.getAllConversations(userID);
   }
 }

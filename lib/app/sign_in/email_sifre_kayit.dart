@@ -110,7 +110,7 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
                   child: Column(
                     children: [
                       TextFormField(
-                        initialValue: "xxx@example.com",
+                        initialValue: "mesut@example.com",
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           errorText: userViewModel.emailHataMesaji != null
@@ -127,7 +127,7 @@ class _EmailSifreLoginPageState extends State<EmailSifreLoginPage> {
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
-                        initialValue: "11111111",
+                        initialValue: "123456",
                         obscureText: true,
                         decoration: InputDecoration(
                           errorText: userViewModel.sifreHataMesaji != null

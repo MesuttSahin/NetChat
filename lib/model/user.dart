@@ -41,12 +41,17 @@ class UserModel {
             : null,
         seviye = map["seviye"];
 
+ // idveResim adında yeni bir yapıcı
+  UserModel.idveResim({required this.userID, required this.profilURL})
+      : email = "", // Eğer e-posta verisi yoksa bir değer atayın
+        userName = ""; // Aynı şekilde kullanıcı adı da yoksa bir değer atayın
+        
   @override
   String toString() {
     return 'UserModel{\n'
         '  userID: $userID,\n'
         '  email: $email,\n'
-        '  userName: ${userName ?? "Not Set"},\n'
+        '  userName: $userName,\n'
         '  profilURL: ${profilURL ?? "Not Set"},\n'
         '  createdAt: ${createdAt != null ? createdAt!.toLocal() : "Not Set"},\n'
         '  updatedAt: ${updatedAt != null ? updatedAt!.toLocal() : "Not Set"},\n'
@@ -55,7 +60,7 @@ class UserModel {
   }
 
   String randomSayiUret() {
-    int rastgeleSayi = Random().nextInt(999999);
+    int rastgeleSayi = Random().nextInt(100);
     return rastgeleSayi.toString();
   }
 }

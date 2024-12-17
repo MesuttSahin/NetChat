@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:net_chat/app/konusmalarim_page.dart';
 import 'package:net_chat/app/kullanicilar.dart';
 import 'package:net_chat/app/my_custom_buttom_nav.dart';
 import 'package:net_chat/app/profil.dart';
@@ -17,15 +18,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TabItem _currentTab = TabItem.Kullanicilar;
 
-
   Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
-    TabItem.Kullanicilar : GlobalKey<NavigatorState>(),
-    TabItem.Profil : GlobalKey<NavigatorState>(),
+    TabItem.Kullanicilar: GlobalKey<NavigatorState>(),
+    TabItem.Konusmalarim: GlobalKey<NavigatorState>(),
+    TabItem.Profil: GlobalKey<NavigatorState>(),
   };
 
   Map<TabItem, Widget> tumSayfalar() {
     return {
       TabItem.Kullanicilar: KullanicilarPage(),
+      TabItem.Konusmalarim: KonusmalarimPage(),
       TabItem.Profil: ProfilPage()
     };
   }
@@ -33,8 +35,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-
-      onWillPop: () async => await navigatorKeys[_currentTab]?.currentState?.maybePop() ?? false,
+      onWillPop: () async =>
+          await navigatorKeys[_currentTab]?.currentState?.maybePop() ?? false,
       // onWillPop: () async => !await navigatorKeys[_currentTab].currentState.maybePop(),
 
       child: MyCustomButtomNavigation(
@@ -42,18 +44,15 @@ class _HomePageState extends State<HomePage> {
         navigatorKeys: navigatorKeys,
         currentTab: _currentTab,
         onSelectedTab: (secilenTab) {
-
-          if(secilenTab == _currentTab){
-            navigatorKeys[secilenTab]?.currentState?.popUntil((route) => route.isFirst);
-          }else{
-          setState(() {
-            _currentTab = secilenTab;
-          });
+          if (secilenTab == _currentTab) {
+            navigatorKeys[secilenTab]
+                ?.currentState
+                ?.popUntil((route) => route.isFirst);
+          } else {
+            setState(() {
+              _currentTab = secilenTab;
+            });
           }
-
-
-
-
 
           print("Seçilen Tab İtem" + secilenTab.toString());
         },

@@ -21,6 +21,7 @@ class MyCustomButtomNavigation extends StatelessWidget {
       tabBar: CupertinoTabBar(
         items: [
           _navItemOlustur(TabItem.Kullanicilar),
+          _navItemOlustur(TabItem.Konusmalarim),
           _navItemOlustur(TabItem.Profil),
         ],
         onTap: (index) => onSelectedTab(TabItem.values[index]),
@@ -28,17 +29,13 @@ class MyCustomButtomNavigation extends StatelessWidget {
       tabBuilder: (context, index) {
         final gosterilecekItem = TabItem.values[index];
         return CupertinoTabView(
-
-          navigatorKey: navigatorKeys[gosterilecekItem],
-          
-          
-          
-          builder: (context) {
-          return sayfaOlusturucu[gosterilecekItem] ??
-              Center(
-                child: Text("404 NOT FOUND"),
-              );
-        });
+            navigatorKey: navigatorKeys[gosterilecekItem],
+            builder: (context) {
+              return sayfaOlusturucu[gosterilecekItem] ??
+                  Center(
+                    child: Text("404 NOT FOUND"),
+                  );
+            });
       },
     );
   }
