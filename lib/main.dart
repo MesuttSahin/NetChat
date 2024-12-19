@@ -4,6 +4,7 @@ import 'package:net_chat/app/landing_page.dart';
 import 'package:net_chat/locator.dart';
 import 'package:net_chat/viewmodel/user_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   setUpLocator();
@@ -21,10 +22,11 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => UserViewmodel(),
       child: MaterialApp(
-          title: "NetChat",
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(primarySwatch: Colors.blue),
-          home: const LandingPage()),
+        title: "NetChat",
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(primarySwatch: Colors.blue),
+        home: const LandingPage(),
+      ),
     );
   }
 }
