@@ -4,7 +4,6 @@ import 'package:net_chat/app/landing_page.dart';
 import 'package:net_chat/locator.dart';
 import 'package:net_chat/viewmodel/user_viewmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   setUpLocator();

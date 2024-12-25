@@ -64,8 +64,8 @@ class _HomePageState extends State<HomePage> {
 
       // Burada gelen bildirimi UI üzerinde göstermek için gerekli işlemleri yapabilirsiniz.
       PlatformDuyarliAlertDialog(
-        baslik: message.data?['title'] ?? "Başlık yok",
-        icerik: message.data?['message'] ?? "İçerik yok",
+        baslik: message.data['title'] ?? "Başlık yok",
+        icerik: message.data['message'] ?? "İçerik yok",
         anaButonYazisi: "Tamam",
         iptalButonYazisi: 'İptal',
       ).goster(context);

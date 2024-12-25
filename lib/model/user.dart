@@ -23,7 +23,7 @@ class UserModel {
     return {
       'userID': userID,
       'email': email,
-      'userName': userName ?? email.substring(0, email.indexOf('@')) + randomSayiUret(),
+      'userName': userName,
       'profilURL': profilURL ?? "",
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'updatedAt': updatedAt ?? FieldValue.serverTimestamp(),

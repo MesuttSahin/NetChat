@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:net_chat/model/konusma.dart';
 import 'package:net_chat/model/mesaj.dart';
 import 'package:net_chat/model/user.dart';

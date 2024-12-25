@@ -1,10 +1,8 @@
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:net_chat/common_widget/platform_duyarli_alert_dialog.dart';
 import 'package:net_chat/common_widget/social_login_button.dart';
-import 'package:net_chat/model/user.dart';
 import 'package:net_chat/viewmodel/user_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -188,7 +186,7 @@ class _ProfilPageState extends State<ProfilPage> {
           iptalButonYazisi: "Iptal", //required olduğu için yazdım
         ).goster(context);
       } else {
-        _controllerUserName!.text = _userViewModel.userModel!.userName!;
+        _controllerUserName!.text = _userViewModel.userModel!.userName;
         PlatformDuyarliAlertDialog(
           baslik: "Hata",
           icerik: "UserName zaten kullanımda farklı bir UserName deneyiniz",
@@ -209,14 +207,12 @@ class _ProfilPageState extends State<ProfilPage> {
           _userViewModel.userModel?.userID, "profil_foto", convertedFile);
       print("gelen url : " + url);
 
-      if (url != null) {
-        PlatformDuyarliAlertDialog(
-          baslik: "Başarılı",
-          icerik: "Profil fotoğrafınız güncellendi",
-          anaButonYazisi: "Tamam",
-          iptalButonYazisi: "Iptal",
-        ).goster(context);
-      }
-    }
+      PlatformDuyarliAlertDialog(
+        baslik: "Başarılı",
+        icerik: "Profil fotoğrafınız güncellendi",
+        anaButonYazisi: "Tamam",
+        iptalButonYazisi: "Iptal",
+      ).goster(context);
+        }
   }
 }

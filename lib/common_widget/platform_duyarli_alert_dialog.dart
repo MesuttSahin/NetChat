@@ -51,17 +51,15 @@ class PlatformDuyarliAlertDialog extends PlatformDuyarliWidget {
     final tumButonlar = <Widget>[];
 
     if (Platform.isAndroid) {
-      if (iptalButonYazisi != null) {
-        tumButonlar.add(
-          CupertinoDialogAction(
-            child: Text(iptalButonYazisi),
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-          ),
-        );
-      }
-
+      tumButonlar.add(
+        CupertinoDialogAction(
+          child: Text(iptalButonYazisi),
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
+      );
+    
       tumButonlar.add(
         CupertinoDialogAction(
           child: Text(anaButonYazisi),
@@ -71,17 +69,15 @@ class PlatformDuyarliAlertDialog extends PlatformDuyarliWidget {
         ),
       );
     } else {
-      if (iptalButonYazisi != null) {
-        tumButonlar.add(
-          TextButton(
-            child: Text(iptalButonYazisi),
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-          ),
-        );
-      }
-
+      tumButonlar.add(
+        TextButton(
+          child: Text(iptalButonYazisi),
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
+      );
+    
       tumButonlar.add(
         TextButton(
           child: Text("Tamam"),
